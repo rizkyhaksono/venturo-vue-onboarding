@@ -74,7 +74,7 @@
     "eslint": "^8.36.0",
     "eslint-plugin-vue": "^7.0.0",
     "unplugin-vue-components": "^0.24.1",
-    "webpack-dev-server": "2.9.7"
+    "webpack-dev-server": "3.1.11"
   },
   "eslintConfig": {
     "root": true,
