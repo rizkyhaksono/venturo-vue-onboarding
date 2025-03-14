@@ -4,7 +4,7 @@ import {
 import axios from 'axios';
 export const useUserStore = defineStore('user', {
   state: () => ({
-    apiUrl: process.env.VUE_APP_APIURL,
+    apiUrl: "https://venturo.laravel.natee.me",
     users: [],
     user: null,
     response: {
@@ -29,9 +29,8 @@ export const useUserStore = defineStore('user', {
     },
     async getUsers() {
       try {
-        const url = `https://venturo.laravel.natee.me/api/v1/users?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
+        const url = `${this.apiUrl}/api/v1/users?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
         const res = await axios.get(url);
-        console.log(res.data.data.list.data)
         const usersDataList = res.data.data.list
         this.users = usersDataList
         this.totalData = res.data.data.meta.total
@@ -89,9 +88,9 @@ export const useUserStore = defineStore('user', {
         this.getUsers();
       }
     },
-    async updateUser(users) {
+    async updateUser(users, id) {
       try {
-        await axios.post(`${this.apiUrl}/api/v1/users/`, users, {
+        await axios.put(`${this.apiUrl}/api/v1/users/${id}`, users, {
           headers: {
             'Content-Type': 'application/json',
           }

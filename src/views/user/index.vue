@@ -126,8 +126,8 @@
               </BTableSimple>
             </div>
 
-            <Pagination :currentPage="userStore.current" :totalRows="userStore.totalData" :perPage="userStore.perpage"
-              @update:currentPage="updatePage" />
+            <Pagination :currentPage="userStore.current" :totalRows="userStore?.users?.total?.id"
+              :perPage="userStore.perpage" @update:currentPage="updatePage" />
           </BCardBody>
         </BCard>
       </BCol>
@@ -161,7 +161,7 @@ const getUsers = async () => {
   await userStore.getUsers();
   if (userStore.users) {
     finishProgress();
-    rows.value = userStore.users || [];
+    rows.value = userStore?.users?.data?.id || [];
   } else {
     failProgress();
     rows.value = [];
@@ -186,6 +186,7 @@ const formModel = reactive({
   email: "",
   password: "",
   foto_url: "",
+  m_user_roles_id: "513694d5-1c77-4cf7-8429-952a9007d311"
 });
 
 const openFormModal = (mode, id = null) => {
@@ -217,7 +218,7 @@ const errorMessage = computed(() => userStore.response?.message || "");
 const saveUser = async () => {
   try {
     if (formModel.id) {
-      await userStore.updateUser(formModel);
+      await userStore.updateUser(formModel, formModel.id);
       if (statusCode.value != 200) {
         showErrorToast("Failed to add user", errorMessage.value);
       } else {
