@@ -145,7 +145,8 @@ export default {
           </router-link>
         </div>
 
-        <BButton variant="white" id="vertical-menu-btn" type="button" class="btn btn-sm px-3 font-size-16 header-item" @click="toggleMenu">
+        <BButton variant="white" id="vertical-menu-btn" type="button" class="btn btn-sm px-3 font-size-16 header-item"
+          @click="toggleMenu">
           <i class="fa fa-fw fa-bars"></i>
         </BButton>
 
@@ -157,7 +158,8 @@ export default {
           </div>
         </BForm>
 
-        <BDropdown variant="black" class="dropdown-mega d-none d-lg-block ms-2" toggle-class="header-item" menu-class="dropdown-megamenu">
+        <BDropdown variant="black" class="dropdown-mega d-none d-lg-block ms-2" toggle-class="header-item"
+          menu-class="dropdown-megamenu">
           <template v-slot:button-content>
             {{ $t("navbar.dropdown.megamenu.text") }}
             <i class="mdi mdi-chevron-down"></i>
@@ -364,7 +366,8 @@ export default {
       </div>
 
       <div class="d-flex">
-        <BDropdown class="d-inline-block d-lg-none ms-2 job-list-dropdown" variant="black" menu-class="dropdown-menu-lg p-0" toggle-class="header-item noti-icon" right>
+        <BDropdown class="d-inline-block d-lg-none ms-2 job-list-dropdown" variant="black"
+          menu-class="dropdown-menu-lg p-0" toggle-class="header-item noti-icon" right>
           <template v-slot:button-content>
             <i class="mdi mdi-magnify"></i>
           </template>
@@ -383,11 +386,14 @@ export default {
           </BForm>
         </BDropdown>
 
-        <BDropdown variant="white" class="d-flex align-center" menu-class="dropdown-menu-end" toggle-class="header-item">
+        <BDropdown variant="white" class="d-flex align-center" menu-class="dropdown-menu-end"
+          toggle-class="header-item">
           <template v-slot:button-content>
             <img id="header-lang-img" src="@/assets/images/flags/us.jpg" alt="Header Language" height="16" />
           </template>
-          <BLink href="#" v-for="(entry, i) in languages" :key="`Lang${i}`" :value="entry" @click="setLanguage(entry.language, entry.title, entry.flag)" :class="{ active: lan === entry.language }" class="dropdown-item notify-item language">
+          <BLink href="#" v-for="(entry, i) in languages" :key="`Lang${i}`" :value="entry"
+            @click="setLanguage(entry.language, entry.title, entry.flag)" :class="{ active: lan === entry.language }"
+            class="dropdown-item notify-item language">
             <img :src="entry.flag" alt="user-image" class="me-1" height="12" />
             <span class="align-middle">{{ entry.title }}</span>
           </BLink>
@@ -399,7 +405,8 @@ export default {
           </BButton>
         </div>
 
-        <BDropdown right menu-class="dropdown-menu-lg p-0 dropdown-menu-end" toggle-class="header-item noti-icon" variant="black">
+        <BDropdown right menu-class="dropdown-menu-lg p-0 dropdown-menu-end" toggle-class="header-item noti-icon"
+          variant="black">
           <template v-slot:button-content>
             <i class="bx bx-bell bx-tada"></i>
             <span class="badge bg-danger rounded-pill">{{
@@ -555,7 +562,8 @@ export default {
         </BDropdown>
 
         <div class="dropdown d-inline-block">
-          <BButton variant="white" type="button" class="btn header-item noti-icon right-bar-toggle toggle-right" @click="toggleRightSidebar">
+          <BButton variant="white" type="button" class="btn header-item noti-icon right-bar-toggle toggle-right"
+            @click="toggleRightSidebar">
             <i class="bx bx-cog bx-spin toggle-right"></i>
           </BButton>
         </div>

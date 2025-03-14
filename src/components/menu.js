@@ -12,4 +12,23 @@ export const menuItems = [
             },
         ]
     },
+    {
+        id: 3,
+        label: "Menu",
+        isTitle: true
+    },
+    {
+        id: 4,
+        label: "Master",
+        icon: "bx-shield-alt-2",
+        subItems: [
+            {
+                id: 5,
+                label: "User",
+                link: "/user",
+                parentId: 4
+            },
+        ]
+    },
+
 ];
