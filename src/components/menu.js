@@ -28,6 +28,18 @@ export const menuItems = [
                 link: "/user",
                 parentId: 4
             },
+            {
+                id: 7,
+                label: "Product Category",
+                link: "/product-category",
+                parentId: 4
+            },
+            {
+                id: 8,
+                label: "Product",
+                link: "/product",
+                parentId: 4
+            },
         ]
     },
 

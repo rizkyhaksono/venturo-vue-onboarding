@@ -14,6 +14,24 @@ export default [
     component: () => import("../views/user")
   },
   {
+    path: "/product-category",
+    name: "product-category",
+    meta: { title: "Master Product Category", authRequired: false },
+    component: () => import("../views/product-category")
+  },
+  {
+    path: "/product",
+    name: "product",
+    meta: { title: "Master Product", authRequired: false },
+    component: () => import("../views/product")
+  },
+  {
+    path: "/product/form",
+    name: "product-form",
+    meta: { title: "Master Product", authRequired: false },
+    component: () => import("../views/product/form.vue")
+  },
+  {
     path: "/login",
     name: "login",
     component: () => import("../views/account/login"),
