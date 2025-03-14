@@ -29,8 +29,9 @@ export const useUserStore = defineStore('user', {
     },
     async getUsers() {
       try {
-        const url = `${this.apiUrl}/api/v1/users?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
+        const url = `https://venturo.laravel.natee.me/api/v1/users?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
         const res = await axios.get(url);
+        console.log(res.data.data.list.data)
         const usersDataList = res.data.data.list
         this.users = usersDataList
         this.totalData = res.data.data.meta.total
