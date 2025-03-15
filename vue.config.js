@@ -1,4 +1,7 @@
 module.exports = {
+  devServer: {
+    allowedHosts: 'all',
+  },
   pluginOptions: {
     i18n: {
       locale: 'en',
@@ -6,5 +9,5 @@ module.exports = {
       localeDir: 'locales',
       enableInSFC: false
     }
-  }
+  },
 }
