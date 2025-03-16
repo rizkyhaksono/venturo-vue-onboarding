@@ -46,7 +46,8 @@
                   <BTr v-for="product in rows" :key="product.id">
                     <BTd>
                       <span v-if="product.photo_url">
-                        <img :src="product.photo_url" style="width: 50px; height: 50px" />
+                        <img :src="product.photo_url.includes('no-image.png') ? '/no-image.jpg' : product.photo_url"
+                          style="width: 50px; height: 50px" alt="product.name" />
                       </span>
                       <span v-else> No Image </span>
                     </BTd>

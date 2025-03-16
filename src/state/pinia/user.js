@@ -4,7 +4,7 @@ import {
 import axios from 'axios';
 export const useUserStore = defineStore('user', {
   state: () => ({
-    apiUrl: "https://venturo.laravel.natee.me",
+    apiUrl: process.env.VUE_APP_APIURL,
     users: [],
     user: null,
     response: {
