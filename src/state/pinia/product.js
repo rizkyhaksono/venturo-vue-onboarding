@@ -2,10 +2,11 @@ import {
   defineStore
 } from "pinia";
 import axios from "axios";
+import { VUE_APP_APIURL } from "../api";
 
 export const useProductStore = defineStore('product', {
   state: () => ({
-    apiUrl: process.env.VUE_APP_APIURL,
+    apiUrl: VUE_APP_APIURL,
     products: [],
     productById: '',
     response: {

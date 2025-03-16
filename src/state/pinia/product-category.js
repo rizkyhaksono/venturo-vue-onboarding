@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { VUE_APP_APIURL } from "../api";
 
 export const useProductCategoryStore = defineStore('category', {
   state: () => ({
-    apiUrl: process.env.VUE_APP_APIURL,
+    apiUrl: VUE_APP_APIURL,
     categories: [],
     error: {
       status: null,
