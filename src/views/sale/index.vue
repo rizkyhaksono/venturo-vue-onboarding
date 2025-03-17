@@ -8,7 +8,7 @@
             <div class="d-flex align-items-center">
               <BCardTitle class="mb-0 flex-grow-1">Sale List</BCardTitle>
               <div class="flex-shrink-0">
-                <BButton class="btn btn-primary me-1">Add Sale</BButton>
+                <BButton class="btn btn-primary me-1" @click="addSale">Add Sale</BButton>
                 <BButton class="btn btn-light me-1" @click="getSales">
                   <i class="mdi mdi-refresh"></i>
                 </BButton>
@@ -19,10 +19,11 @@
           <BCardBody class="border-bottom">
             <BRow class="g-3">
               <BCol xxl="10" lg="8">
-                <BFormInput type="text" class="form-control search" placeholder="Search for ..." />
+                <BFormInput type="text" class="form-control search" placeholder="Search for ..."
+                  v-model="saleStore.searchQuery" @keydown.enter="searchData" />
               </BCol>
               <BCol xxl="2" lg="4">
-                <BButton variant="soft-secondary" class="w-100">
+                <BButton variant="soft-secondary" @click="searchData" class="w-100">
                   <i class="mdi mdi-magnify align-middle"></i>
                   Cari
                 </BButton>
@@ -59,17 +60,34 @@
                             </div>
                             <div class="text-end">
                               <span class="d-block">Quantity: {{ detail.total_item }}</span>
-                              <span class="fw-bold text-success">Price: ${{ detail.price }}</span>
+                              <span class="fw-bold text-success">Price: Rp. {{ detail.price }}</span>
                             </div>
                           </div>
                         </div>
                       </div>
                     </BTd>
+                    <BTd>
+                      <ul class="list-unstyled hstack gap-1 mb-0 justify-content-end">
+                        <li data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit"
+                          @click="editProduct(sale.id)">
+                          <BButton class="btn btn-sm btn-soft-info">
+                            <i class="mdi mdi-pencil"></i>
+                          </BButton>
+                        </li>
+                        <li data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete"
+                          @click="deleteProduct(sale.id)">
+                          <BButton data-bs-toggle="modal" class="btn btn-sm btn-soft-danger">
+                            <i class="mdi mdi-delete"></i>
+                          </BButton>
+                        </li>
+                      </ul>
+                    </BTd>
                   </BTr>
                 </BTbody>
               </BTableSimple>
             </div>
-            <Pagination :currentPage="saleStore.current" :totalRows="saleStore.totalData" />
+            <Pagination :currentPage="saleStore.current" :totalRows="saleStore.totalData"
+              @update:currentPage="updatePage" />
           </BCardBody>
         </BCard>
       </BCol>
@@ -84,8 +102,10 @@ import Pagination from "@/components/widgets/pagination";
 import { useSaleStore } from "../../state/pinia";
 import { onMounted, ref } from "vue";
 import { useProgress } from "@/helpers/progress";
+import { useRouter } from "vue-router";
 
 const saleStore = useSaleStore();
+const router = useRouter();
 const { startProgress, finishProgress, failProgress } = useProgress();
 const rows = ref([]);
 
@@ -93,7 +113,7 @@ const getSales = async () => {
   try {
     startProgress();
     await saleStore.getSales();
-    rows.value = saleStore.sales?.sales || []; // Ensure correct data access
+    rows.value = saleStore.sales?.sales || [];
     finishProgress();
   } catch (error) {
     failProgress();
@@ -102,5 +122,28 @@ const getSales = async () => {
   }
 };
 
-onMounted(getSales);
+const addSale = () => {
+  saleStore.openForm("add");
+  router.push({ name: "sale-form", params: { sale: "" } });
+}
+
+const editProduct = async (id) => {
+  saleStore.openForm("edit");
+  router.push({ name: "sale-form" })
+  await saleStore.getSaleById(id);
+}
+
+const updatePage = async (page) => {
+  await saleStore.changePage(page);
+  await getSales();
+}
+
+const searchData = async () => {
+  await saleStore.changePage(1)
+  await getSales();
+}
+
+onMounted(async () => {
+  await getSales();
+});
 </script>

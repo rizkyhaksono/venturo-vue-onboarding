@@ -38,6 +38,18 @@ export default [
     component: () => import("../views/sale")
   },
   {
+    path: "/sale/form",
+    name: "sale-form",
+    meta: { title: "Master Sale", authRequired: false },
+    component: () => import("../views/sale/form.vue")
+  },
+  {
+    path: "/transaction",
+    name: "transaction",
+    meta: { title: "Master Transaction", authRequired: false },
+    component: () => import("../views/transaction")
+  },
+  {
     path: "/login",
     name: "login",
     component: () => import("../views/account/login"),

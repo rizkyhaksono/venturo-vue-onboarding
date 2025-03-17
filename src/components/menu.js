@@ -46,6 +46,12 @@ export const menuItems = [
                 link: "/sale",
                 parentId: 4
             },
+            {
+                id: 10,
+                label: "Transaction",
+                link: "/transaction",
+                parentId: 4
+            }
         ]
     },
 

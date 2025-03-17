@@ -24,8 +24,9 @@ export const useSaleStore = defineStore('sale', {
     maxImageSize: 3 * 1024 * 1024
   }),
   actions: {
-    openForm(newAction) {
+    async openForm(newAction) {
       this.formAction.action = newAction
+      await this.getSales();
     },
     async getSales() {
       try {
@@ -35,6 +36,68 @@ export const useSaleStore = defineStore('sale', {
         this.totalData = res?.data?.sales?.length
       } catch (err) {
         console.log(err)
+      }
+    },
+    async deleteSale(id) {
+      try {
+        const res = await axios.delete(`${this.apiUrl}/api/v1/sales/${id}`)
+        this.error = {
+          status: res.status,
+          message: res.data.message
+        }
+      } catch (err) {
+        this.error = {
+          status: err.response?.status,
+          message: err.message,
+          list: err.response.data
+        }
+      }
+    },
+    async changePage(newPage) {
+      this.current = newPage
+    },
+    async searchUsers(query) {
+      this.searchQuery = query
+      this.current = 1;
+    },
+    async addSale(sale) {
+      try {
+        const res = await axios.post(`${this.apiUrl}/api/v1/sales`, sale)
+        this.error = {
+          status: res.status,
+          message: res.data.message
+        }
+      } catch (err) {
+        this.error = {
+          status: err.response?.status,
+          message: err.message,
+          list: err.response.data.errors
+        }
+      }
+    },
+    async getSaleById(id) {
+      try {
+        const res = await axios.get(`${this.apiUrl}/api/v1/sales/${id}`)
+        console.log(res)
+        this.saleById = res
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async updateSales(sale) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/api/v1/sales`, sale)
+        console.log(res)
+        this.error = {
+          status: res.status,
+          message: res.data.message
+        }
+      } catch (err) {
+        this.error = {
+          status: err.response?.status,
+          message: err.message,
+          list: err.response.data.errors
+        }
       }
     },
     resetState() {

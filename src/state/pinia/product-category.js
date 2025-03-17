@@ -34,7 +34,6 @@ export const useProductCategoryStore = defineStore('category', {
     async updateCategory(category) {
       try {
         const res = await axios.put(`${this.apiUrl}/api/v1/categories`, category)
-        console.log(res);
         this.error = {
           status: res.status,
           message: res.data.message

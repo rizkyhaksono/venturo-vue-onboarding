@@ -182,7 +182,7 @@ import PageHeader from "@/components/page-header";
 import ImageCropper from "@/components/widgets/cropper";
 import { useProductCategoryStore, useProductStore } from "../../state/pinia";
 import { computed, onMounted, reactive, ref, watch } from "vue";
-import { showSuccessToast, showErrorToast, } from "@/helpers/alert.js";
+import { showSuccessToast, showErrorToast } from "@/helpers/alert.js";
 import { useProgress } from "@/helpers/progress"; // Import custom progress function
 import { useRouter } from "vue-router";
 const router = useRouter();
