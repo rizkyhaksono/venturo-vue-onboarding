@@ -69,13 +69,13 @@
                     <BTd>
                       <ul class="list-unstyled hstack gap-1 mb-0 justify-content-end">
                         <li data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit"
-                          @click="editProduct(sale.id)">
+                          @click="editSale(sale.id)">
                           <BButton class="btn btn-sm btn-soft-info">
                             <i class="mdi mdi-pencil"></i>
                           </BButton>
                         </li>
                         <li data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete"
-                          @click="deleteProduct(sale.id)">
+                          @click="deleteSale(sale.id)">
                           <BButton data-bs-toggle="modal" class="btn btn-sm btn-soft-danger">
                             <i class="mdi mdi-delete"></i>
                           </BButton>
@@ -102,6 +102,7 @@ import Pagination from "@/components/widgets/pagination";
 import { useSaleStore } from "../../state/pinia";
 import { onMounted, ref } from "vue";
 import { useProgress } from "@/helpers/progress";
+import { showSuccessToast, showErrorToast, showDeleteConfirmationDialog } from "@/helpers/alert.js"
 import { useRouter } from "vue-router";
 
 const saleStore = useSaleStore();
@@ -122,12 +123,25 @@ const getSales = async () => {
   }
 };
 
+const deleteSale = async (id) => {
+  const confirmed = await showDeleteConfirmationDialog()
+  if (confirmed) {
+    try {
+      await saleStore.deleteSale(id);
+      showSuccessToast("Sale deleted successfully");
+      await getSales();
+    } catch (err) {
+      showErrorToast("Failed to delete sale");
+    }
+  }
+}
+
 const addSale = () => {
   saleStore.openForm("add");
   router.push({ name: "sale-form", params: { sale: "" } });
 }
 
-const editProduct = async (id) => {
+const editSale = async (id) => {
   saleStore.openForm("edit");
   router.push({ name: "sale-form" })
   await saleStore.getSaleById(id);

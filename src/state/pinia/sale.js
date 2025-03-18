@@ -67,12 +67,14 @@ export const useSaleStore = defineStore('sale', {
           status: res.status,
           message: res.data.message
         }
+        return res
       } catch (err) {
         this.error = {
           status: err.response?.status,
           message: err.message,
           list: err.response.data.errors
         }
+        throw err
       }
     },
     async getSaleById(id) {
@@ -84,20 +86,21 @@ export const useSaleStore = defineStore('sale', {
         console.log(err)
       }
     },
-    async updateSales(sale) {
+    async updateSales(sale, id) {
       try {
-        const res = await axios.put(`${this.apiUrl}/api/v1/sales`, sale)
-        console.log(res)
+        const res = await axios.put(`${this.apiUrl}/api/v1/sales/${id}`, sale)
         this.error = {
           status: res.status,
           message: res.data.message
         }
+        return res
       } catch (err) {
         this.error = {
           status: err.response?.status,
           message: err.message,
           list: err.response.data.errors
         }
+        throw err
       }
     },
     resetState() {
