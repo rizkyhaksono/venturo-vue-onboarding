@@ -50,6 +50,13 @@ export default [
     component: () => import("../views/transaction")
   },
   {
+    path: "/transaction/form/:id",
+    name: "transaction-form",
+    meta: { title: "Master Transaction", authRequired: false },
+    component: () => import("../views/transaction/form.vue"),
+    props: true
+  },
+  {
     path: "/login",
     name: "login",
     component: () => import("../views/account/login"),

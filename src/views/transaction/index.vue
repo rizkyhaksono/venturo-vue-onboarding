@@ -8,7 +8,7 @@
             <div class="d-flex align-items-center">
               <BCardTitle class="mb-0 flex-grow-1">Transaction List</BCardTitle>
               <div class="flex-shrink-0">
-                <BButton class="btn btn-primary me-1">Add Transaction</BButton>
+                <BButton class="btn btn-primary me-1" @click="handleAddProduct">Add Transaction</BButton>
                 <BLink href="#!" class="btn btn-light me-1" @click="getSaleMenu"><i class="mdi mdi-refresh"></i></BLink>
               </div>
             </div>
@@ -31,7 +31,7 @@
           <BCardBody class="border-bottom">
             <BRow class="g-3">
               <BCol v-for="product in productRows" :key="product.id" lg="3" md="6" class="mb-3">
-                <BCard class="product-card h-100 transition-card" hover @click="handleProductClick(product.id)">
+                <BCard class="product-card h-100 transition-card" hover @click="handleTransactionClick(product.id)">
                   <BCardBody>
                     <h5 class="card-title">{{ product.name }}</h5>
                     <div class="mt-3">
@@ -90,6 +90,7 @@ import { useRouter } from "vue-router";
 import { useProgress } from "@/helpers/progress";
 import { computed, onMounted, ref } from "vue";
 
+const router = useRouter();
 const saleMStore = useSaleStore();
 const productStore = useProductStore();
 const { startProgress, finishProgress, failProgress } = useProgress();
@@ -156,8 +157,14 @@ const formattedTransactions = computed(() => {
   return transactions;
 });
 
-const handleProductClick = (id) => {
-  console.log(id);
+const handleAddProduct = () => {
+  saleMStore.openForm("add");
+  router.push({ name: "sale-form" });
+}
+
+const handleTransactionClick = (id) => {
+  saleMStore.openForm("add");
+  router.push({ name: "transaction-form", params: { id: id.toString() } });
 }
 
 onMounted(async () => {
