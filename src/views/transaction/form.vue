@@ -1,11 +1,6 @@
 <template>
   <Layout>
-    <span v-if="action_button">
-      <PageHeader title="Edit Transaction" pageTitle="Edit Transaction" />
-    </span>
-    <span v-else>
-      <PageHeader title="Form Transaction" pageTitle="Transaction" />
-    </span>
+    <PageHeader :title="`Add ID ${route.params.id} Transaction`" pageTitle="Transaction" />
     <BCard>
       <BCol>
         <BForm class="form-horizontal" role="form">
@@ -41,7 +36,7 @@
                 </BTr>
               </BThead>
               <BTbody>
-                <BTr v-for="(detail, i) in productDetail" :key="i">
+                <BTr v-for="(detail, i) in transactionDetail" :key="i">
                   <BTh>
                     <span class="d-flex justify-content-center">
                       <BButton @click="removeRow(detail.id, i)" class="btn btn-sm btn-soft-danger">
@@ -139,7 +134,6 @@ const productStore = useProductStore();
 const productCategoryStore = useProductCategoryStore();
 const customerStore = useCustomerStore();
 const { startProgress, finishProgress, failProgress } = useProgress();
-const transactionId = route.params.id;
 
 const transactionDetail = ref([
   {
@@ -160,7 +154,10 @@ const saleById = computed(() => saleStore.saleById || {});
 const productById = computed(() => productStore.productById || {});
 const action = computed(() => saleStore.formAction.action);
 
-const productList = computed(() => productStore.products || []);
+const productList = computed(() => {
+  const productId = Number(route.params.id);
+  return productStore.products.filter(product => product.id === productId);
+});
 const productCategoryList = computed(() => productCategoryStore.categories || []);
 const customerList = computed(() => customerStore.customers || []);
 
@@ -176,8 +173,9 @@ watch(() => route.params.id, async (newId) => {
         formModel.m_category_id = product.m_category_id;
 
         transactionDetail.value = product.details.map(detail => ({
-          m_variant_id: detail.m_variant_id,
-          stock: detail.stock,
+          m_product_id: newId,
+          m_product_detail_id: detail.m_product_detail_id,
+          total_item: detail.total_item,
           price: detail.price
         }));
       }
@@ -198,7 +196,7 @@ const getSale = async () => {
 
 const getProducts = async () => {
   await productStore.getProducts();
-};
+}
 
 const getProductCategories = async () => {
   await productCategoryStore.getCategories();
@@ -259,6 +257,4 @@ onMounted(async () => {
   await getProductCategories();
   await getCustomers();
 })
-
-console.log("Received Transaction ID:", transactionId); 
 </script>
