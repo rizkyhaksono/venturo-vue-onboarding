@@ -46,6 +46,16 @@
 
           <BCardBody class="border-bottom">
             <div class="d-flex align-items-center">
+              <BCardTitle class="mb-0 flex-grow-1">Sales Chart</BCardTitle>
+            </div>
+
+            <div class="mt-4">
+              <VueApexCharts type="line" height="350" :options="chartOptions" :series="processChartData" />
+            </div>
+          </BCardBody>
+
+          <BCardBody class="border-bottom">
+            <div class="d-flex align-items-center">
               <BCardTitle class="mb-0 flex-grow-1">Sale Menu</BCardTitle>
               <div class="flex-shrink-0">
                 <BButton class="btn btn-dark me-1" @click="getExportSalesCategory">
@@ -85,6 +95,7 @@
 <script setup>
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
+import VueApexCharts from "vue3-apexcharts";
 import { useSaleStore, useProductStore } from "../../state/pinia";
 import { useRouter } from "vue-router";
 import { useProgress } from "@/helpers/progress";
@@ -166,6 +177,63 @@ const handleTransactionClick = (id) => {
   saleMStore.openForm("add");
   router.push({ name: "transaction-form", params: { id: id.toString() } });
 }
+
+const processChartData = computed(() => {
+  if (!saleMenuRows.value?.length) return [];
+
+  const products = saleMenuRows.value[0].products;
+  return products.map(product => ({
+    name: product.product_name,
+    data: product.transactions.map(t => t.total_sales)
+  }));
+});
+
+const chartOptions = computed(() => ({
+  chart: {
+    height: 350,
+    type: 'line',
+    toolbar: {
+      show: true
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    curve: 'smooth',
+    width: 3
+  },
+  grid: {
+    row: {
+      colors: ['#f3f3f3', 'transparent'],
+      opacity: 0.5
+    }
+  },
+  xaxis: {
+    categories: saleMenuRows.value[0]?.products[0]?.transactions.map(t => {
+      return new Date(t.date_transaction).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      });
+    }) || [],
+    tickAmount: 10
+  },
+  tooltip: {
+    y: {
+      formatter: function (value) {
+        return `Rp ${value.toLocaleString()}`
+      }
+    }
+  },
+  colors: ['#f87979', '#7367f0'],
+  legend: {
+    position: 'top',
+    horizontalAlign: 'right',
+    floating: true,
+    offsetY: -25,
+    offsetX: -5
+  }
+}));
 
 onMounted(async () => {
   await getProducts();
