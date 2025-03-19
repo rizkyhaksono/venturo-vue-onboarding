@@ -9,7 +9,7 @@
               <BCardTitle class="mb-0 flex-grow-1">Transaction List</BCardTitle>
               <div class="flex-shrink-0">
                 <BButton class="btn btn-primary me-1">Add Transaction</BButton>
-                <BLink href="#!" class="btn btn-light me-1"><i class="mdi mdi-refresh"></i></BLink>
+                <BLink href="#!" class="btn btn-light me-1" @click="getSaleMenu"><i class="mdi mdi-refresh"></i></BLink>
               </div>
             </div>
           </BCardBody>
@@ -28,6 +28,54 @@
             </BRow>
           </BCardBody>
 
+          <BCardBody class="border-bottom">
+            <BRow class="g-3">
+              <BCol v-for="product in productRows" :key="product.id" lg="3" md="6" class="mb-3">
+                <BCard class="product-card h-100 transition-card" hover @click="handleProductClick(product.id)">
+                  <BCardBody>
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <div class="mt-3">
+                      <p class="mb-2">Price: Rp {{ product.price }}</p>
+                      <p class="mb-0">{{ product.description }}</p>
+                    </div>
+                  </BCardBody>
+                </BCard>
+              </BCol>
+            </BRow>
+          </BCardBody>
+
+          <BCardBody class="border-bottom">
+            <div class="d-flex align-items-center">
+              <BCardTitle class="mb-0 flex-grow-1">Sale Menu</BCardTitle>
+              <div class="flex-shrink-0">
+                <BButton class="btn btn-dark me-1" @click="getExportSalesCategory">
+                  Export Sale Category <i class="mdi mdi-download"></i>
+                </BButton>
+              </div>
+            </div>
+          </BCardBody>
+          <BCardBody class="border-bottom">
+            <div class="table-responsive">
+              <BTableSimple class="align-middle dt-responsive nowrap w-100 table-check" id="user-list">
+                <BThead>
+                  <BTr>
+                    <BTh>Date</BTh>
+                    <BTh>Category</BTh>
+                    <BTh>Product</BTh>
+                    <BTh>Total Sales</BTh>
+                  </BTr>
+                </BThead>
+                <BTbody>
+                  <BTr v-for="(transaction, index) in formattedTransactions" :key="index">
+                    <BTd>{{ transaction.date }}</BTd>
+                    <BTd>{{ transaction.category }}</BTd>
+                    <BTd>{{ transaction.product }}</BTd>
+                    <BTd>{{ transaction.total_sales }}</BTd>
+                  </BTr>
+                </BTbody>
+              </BTableSimple>
+            </div>
+          </BCardBody>
         </BCard>
       </BCol>
     </BRow>
@@ -37,4 +85,94 @@
 <script setup>
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
+import { useSaleStore, useProductStore } from "../../state/pinia";
+import { useRouter } from "vue-router";
+import { useProgress } from "@/helpers/progress";
+import { computed, onMounted, ref } from "vue";
+
+const saleMStore = useSaleStore();
+const productStore = useProductStore();
+const { startProgress, finishProgress, failProgress } = useProgress();
+
+const productRows = ref([]);
+const saleMenuRows = ref([]);
+
+const getProducts = async () => {
+  startProgress();
+  await productStore.getProducts()
+  if (productStore.products) {
+    finishProgress();
+    productRows.value = productStore.products || [];
+  } else {
+    failProgress();
+    productRows.value = [];
+  }
+}
+
+const getSaleMenu = async () => {
+  try {
+    startProgress();
+    const today = new Date();
+    const endDate = today.toISOString().split('T')[0];
+    const res = await saleMStore.saleMenu("2025-03-01", endDate);
+    finishProgress();
+    saleMenuRows.value = res?.data.data || [];
+  } catch (err) {
+    failProgress();
+    saleMenuRows.value = [];
+  }
+}
+
+const getExportSalesCategory = async () => {
+  try {
+    startProgress();
+    const res = await saleMStore.downloadSaleCategory();
+    const blob = new Blob([res.data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = "sales-category-report.xlsx";
+    link.click();
+    window.URL.revokeObjectURL(link.href);
+    finishProgress();
+  } catch (err) {
+    failProgress();
+  }
+}
+
+const formattedTransactions = computed(() => {
+  let transactions = [];
+  saleMenuRows.value.forEach((category) => {
+    category.products.forEach((product) => {
+      product.transactions.forEach((transaction) => {
+        transactions.push({
+          date: transaction.date_transaction,
+          category: category.category_name,
+          product: product.product_name,
+          total_sales: transaction.total_sales,
+        });
+      });
+    });
+  });
+  return transactions;
+});
+
+const handleProductClick = (id) => {
+  console.log(id);
+}
+
+onMounted(async () => {
+  await getProducts();
+  await getSaleMenu();
+});
 </script>
+
+<style scoped>
+.transition-card {
+  transition: all 0.3s ease;
+}
+
+.transition-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+</style>

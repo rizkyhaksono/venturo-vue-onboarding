@@ -103,6 +103,52 @@ export const useSaleStore = defineStore('sale', {
         throw err
       }
     },
+    async saleMenu(startDate, endDate) {
+      try {
+        const res = await axios.get(`${this.apiUrl}/api/v1/report/sales-menu?start_date=${startDate}&end_date=${endDate}`)
+        return res
+      } catch (err) {
+        this.error = {
+          status: err.response?.status,
+          message: err.message,
+          list: err.response.data
+        }
+      }
+    },
+    async downloadSaleCategory() {
+      try {
+        const res = await axios.get(`${this.apiUrl}/api/v1/download/sales-category?is_export_excel=true`, {
+          responseType: 'blob'
+        })
+        this.error = {
+          status: res.status,
+          message: res.data.message
+        }
+        return res
+      } catch (err) {
+        this.error = {
+          status: err.response?.status,
+          message: err.message,
+          list: err.response.data
+        }
+      }
+    },
+    async saleCustomer() {
+      try {
+        const res = await axios.get(`${this.apiUrl}/api/v1/sale-customer`)
+        this.error = {
+          status: res.status,
+          message: res.data.message
+        }
+        return res
+      } catch (err) {
+        this.error = {
+          status: err.response?.status,
+          message: err.message,
+          list: err.response.data
+        }
+      }
+    },
     resetState() {
       this.sales = []
       this.saleById = ''
