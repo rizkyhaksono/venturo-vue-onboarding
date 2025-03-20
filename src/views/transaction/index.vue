@@ -48,9 +48,11 @@
             <div class="d-flex align-items-center">
               <BCardTitle class="mb-0 flex-grow-1">Sales Chart</BCardTitle>
             </div>
-
             <div class="mt-4">
-              <VueApexCharts type="line" height="350" :options="chartOptions" :series="processChartData" />
+              <VueApexCharts type="line" height="350" :options="chartLineOptions" :series="processLineChartData" />
+            </div>
+            <div class="mt-4">
+              <VueApexCharts type="bar" height="350" :options="barChartOptions" :series="processBarChartData" />
             </div>
           </BCardBody>
 
@@ -178,61 +180,64 @@ const handleTransactionClick = (id) => {
   router.push({ name: "transaction-form", params: { id: id.toString() } });
 }
 
-const processChartData = computed(() => {
-  if (!saleMenuRows.value?.length) return [];
+const processLineChartData = computed(() => {
+  if (!saleMenuRows.value[0]?.products) return [];
 
-  const products = saleMenuRows.value[0].products;
-  return products.map(product => ({
+  return saleMenuRows.value[0].products.map((product) => ({
     name: product.product_name,
-    data: product.transactions.map(t => t.total_sales)
+    data: product.transactions.map((t) => t.total_sales),
   }));
 });
 
-const chartOptions = computed(() => ({
-  chart: {
-    height: 350,
-    type: 'line',
-    toolbar: {
-      show: true
-    }
-  },
-  dataLabels: {
-    enabled: false
-  },
-  stroke: {
-    curve: 'smooth',
-    width: 3
-  },
-  grid: {
-    row: {
-      colors: ['#f3f3f3', 'transparent'],
-      opacity: 0.5
-    }
-  },
+const chartLineOptions = computed(() => ({
+  chart: { height: 350, type: "line", toolbar: { show: true } },
+  dataLabels: { enabled: false },
+  stroke: { curve: "smooth", width: 3 },
+  grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
   xaxis: {
-    categories: saleMenuRows.value[0]?.products[0]?.transactions.map(t => {
-      return new Date(t.date_transaction).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric'
-      });
-    }) || [],
-    tickAmount: 10
+    categories:
+      saleMenuRows.value[0]?.products[0]?.transactions
+        ? saleMenuRows.value[0].products[0].transactions.map((t) =>
+          new Date(t.date_transaction).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+        )
+        : [],
+    tickAmount: 10,
   },
   tooltip: {
-    y: {
-      formatter: function (value) {
-        return `Rp ${value.toLocaleString()}`
-      }
-    }
+    y: { formatter: (value) => `Rp ${value.toLocaleString()}` },
   },
-  colors: ['#f87979', '#7367f0'],
-  legend: {
-    position: 'top',
-    horizontalAlign: 'right',
-    floating: true,
-    offsetY: -25,
-    offsetX: -5
-  }
+  colors: ["#f87979", "#7367f0"],
+  legend: { position: "top", horizontalAlign: "right", floating: true, offsetY: -25, offsetX: -5 },
+}));
+
+const processBarChartData = computed(() => {
+  if (!saleMenuRows.value[0]?.products) return [];
+
+  return saleMenuRows.value[0].products.map((product) => ({
+    name: product.product_name,
+    data: product.transactions?.map((t) => t.total_sales) || [],
+  }));
+});
+
+const barChartOptions = computed(() => ({
+  chart: { type: "bar", height: 350, toolbar: { show: true }, stacked: false },
+  plotOptions: { bar: { horizontal: false, columnWidth: "55%", endingShape: "rounded" } },
+  dataLabels: { enabled: false },
+  stroke: { show: true, width: 2, colors: ["transparent"] },
+  xaxis: {
+    categories:
+      saleMenuRows.value[0]?.products[0]?.transactions
+        ? saleMenuRows.value[0].products[0].transactions.map((t) =>
+          new Date(t.date_transaction).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+        )
+        : [],
+    tickAmount: 10,
+  },
+  yaxis: { title: { text: "Total Sales (Rp)" } },
+  fill: { opacity: 1 },
+  tooltip: {
+    y: { formatter: (value) => `Rp ${value.toLocaleString()}` },
+  },
 }));
 
 onMounted(async () => {
