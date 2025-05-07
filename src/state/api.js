@@ -1,1 +1,1 @@
-export const VUE_APP_APIURL = "https://venturo.laravel.natee.me"
+export const VUE_APP_APIURL = "https://venturo.laravel.natee.my.id"
