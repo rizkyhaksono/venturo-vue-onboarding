@@ -48,12 +48,12 @@
             <div class="d-flex align-items-center">
               <BCardTitle class="mb-0 flex-grow-1">Sales Chart</BCardTitle>
             </div>
-            <div class="mt-4">
+            <!-- <div class="mt-4">
               <VueApexCharts type="line" height="350" :options="chartLineOptions" :series="processLineChartData" />
             </div>
             <div class="mt-4">
               <VueApexCharts type="bar" height="350" :options="barChartOptions" :series="processBarChartData" />
-            </div>
+            </div> -->
           </BCardBody>
 
           <BCardBody class="border-bottom">
@@ -97,7 +97,7 @@
 <script setup>
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
-import VueApexCharts from "vue3-apexcharts";
+// import VueApexCharts from "vue3-apexcharts";
 import { useSaleStore, useProductStore } from "../../state/pinia";
 import { useRouter } from "vue-router";
 import { useProgress } from "@/helpers/progress";
@@ -180,65 +180,65 @@ const handleTransactionClick = (id) => {
   router.push({ name: "transaction-form", params: { id: id.toString() } });
 }
 
-const processLineChartData = computed(() => {
-  if (!saleMenuRows.value[0]?.products) return [];
+// const processLineChartData = computed(() => {
+//   if (!saleMenuRows.value[0]?.products) return [];
 
-  return saleMenuRows.value[0].products.map((product) => ({
-    name: product.product_name,
-    data: product.transactions.map((t) => t.total_sales),
-  }));
-});
+//   return saleMenuRows.value[0].products.map((product) => ({
+//     name: product.product_name,
+//     data: product.transactions.map((t) => t.total_sales),
+//   }));
+// });
 
-const chartLineOptions = computed(() => ({
-  chart: { height: 350, type: "line", toolbar: { show: true } },
-  dataLabels: { enabled: false },
-  stroke: { curve: "smooth", width: 3 },
-  grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
-  xaxis: {
-    categories:
-      saleMenuRows.value[0]?.products[0]?.transactions
-        ? saleMenuRows.value[0].products[0].transactions.map((t) =>
-          new Date(t.date_transaction).toLocaleDateString("en-US", { month: "short", day: "numeric" })
-        )
-        : [],
-    tickAmount: 10,
-  },
-  tooltip: {
-    y: { formatter: (value) => `Rp ${value.toLocaleString()}` },
-  },
-  colors: ["#f87979", "#7367f0"],
-  legend: { position: "top", horizontalAlign: "right", floating: true, offsetY: -25, offsetX: -5 },
-}));
+// const chartLineOptions = computed(() => ({
+//   chart: { height: 350, type: "line", toolbar: { show: true } },
+//   dataLabels: { enabled: false },
+//   stroke: { curve: "smooth", width: 3 },
+//   grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
+//   xaxis: {
+//     categories:
+//       saleMenuRows.value[0]?.products[0]?.transactions
+//         ? saleMenuRows.value[0].products[0].transactions.map((t) =>
+//           new Date(t.date_transaction).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+//         )
+//         : [],
+//     tickAmount: 10,
+//   },
+//   tooltip: {
+//     y: { formatter: (value) => `Rp ${value.toLocaleString()}` },
+//   },
+//   colors: ["#f87979", "#7367f0"],
+//   legend: { position: "top", horizontalAlign: "right", floating: true, offsetY: -25, offsetX: -5 },
+// }));
 
-const processBarChartData = computed(() => {
-  if (!saleMenuRows.value[0]?.products) return [];
+// const processBarChartData = computed(() => {
+//   if (!saleMenuRows.value[0]?.products) return [];
 
-  return saleMenuRows.value[0].products.map((product) => ({
-    name: product.product_name,
-    data: product.transactions?.map((t) => t.total_sales) || [],
-  }));
-});
+//   return saleMenuRows.value[0].products.map((product) => ({
+//     name: product.product_name,
+//     data: product.transactions?.map((t) => t.total_sales) || [],
+//   }));
+// });
 
-const barChartOptions = computed(() => ({
-  chart: { type: "bar", height: 350, toolbar: { show: true }, stacked: false },
-  plotOptions: { bar: { horizontal: false, columnWidth: "55%", endingShape: "rounded" } },
-  dataLabels: { enabled: false },
-  stroke: { show: true, width: 2, colors: ["transparent"] },
-  xaxis: {
-    categories:
-      saleMenuRows.value[0]?.products[0]?.transactions
-        ? saleMenuRows.value[0].products[0].transactions.map((t) =>
-          new Date(t.date_transaction).toLocaleDateString("en-US", { month: "short", day: "numeric" })
-        )
-        : [],
-    tickAmount: 10,
-  },
-  yaxis: { title: { text: "Total Sales (Rp)" } },
-  fill: { opacity: 1 },
-  tooltip: {
-    y: { formatter: (value) => `Rp ${value.toLocaleString()}` },
-  },
-}));
+// const barChartOptions = computed(() => ({
+//   chart: { type: "bar", height: 350, toolbar: { show: true }, stacked: false },
+//   plotOptions: { bar: { horizontal: false, columnWidth: "55%", endingShape: "rounded" } },
+//   dataLabels: { enabled: false },
+//   stroke: { show: true, width: 2, colors: ["transparent"] },
+//   xaxis: {
+//     categories:
+//       saleMenuRows.value[0]?.products[0]?.transactions
+//         ? saleMenuRows.value[0].products[0].transactions.map((t) =>
+//           new Date(t.date_transaction).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+//         )
+//         : [],
+//     tickAmount: 10,
+//   },
+//   yaxis: { title: { text: "Total Sales (Rp)" } },
+//   fill: { opacity: 1 },
+//   tooltip: {
+//     y: { formatter: (value) => `Rp ${value.toLocaleString()}` },
+//   },
+// }));
 
 onMounted(async () => {
   await getProducts();
