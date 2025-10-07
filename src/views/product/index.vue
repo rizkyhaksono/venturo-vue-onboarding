@@ -49,7 +49,7 @@
                       <span v-if="product.photo_url">
                         <img :src="product.photo_url.includes('no-image.png')
                           ? '/no-image.jpg'
-                          : `https://venturo.laravel.natee.me/storage/${product.photo_url.split('/storage/')[1]}`"
+                          : `https://venturo.laravel.natee.my.id/storage/${product.photo_url.split('/storage/')[1]}`"
                           style="width: 50px; height: 50px" alt="product.name" />
                       </span>
                       <span v-else> No Image </span>
