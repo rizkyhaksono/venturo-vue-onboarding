@@ -41,8 +41,6 @@ const optionsProgressBar = {
   inverse: false
 }
 
-
-
 const app = createApp(App)
   .use(pinia)
   .use(router)
@@ -54,12 +52,11 @@ const app = createApp(App)
   // .use(i18n)
   .use(registerScrollSpy)
   .directive("maska", vMaska)
-  
+
 // Tambahkan VueProgressBar ke globalProperties
 app.config.globalProperties.$Progress = app.config.globalProperties.$Progress || {};
 
 import { axiosInterceptors } from '@/core/interceptor/axios-interceptor'; // Impor fungsi setupInterceptors
 axiosInterceptors();
-
 
 app.mount('#app')
